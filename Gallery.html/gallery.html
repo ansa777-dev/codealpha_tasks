@@ -1,0 +1,324 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Responsive Image Gallery</title>
+
+    <!-- CSS File -->
+    <link rel="stylesheet" href="style.css">
+
+    <!-- Font Awesome -->
+    <link rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+</head>
+<body>
+
+    <!-- ================= Navbar ================= -->
+    <nav>
+        <h1>Image Gallery</h1>
+
+        <ul>
+            <li class="active" data-filter="all">All</li>
+            <li data-filter="nature">Nature</li>
+            <li data-filter="travel">Travel</li>
+            <li data-filter="food">Food</li>
+            <li data-filter="animals">Animals</li>
+        </ul>
+    </nav>
+
+    <!-- ================= Hero Section ================= -->
+
+    <section class="hero">
+        <h2>Explore Beautiful Images</h2>
+        <p>Discover amazing moments from around the world.</p>
+    </section>
+
+    <!-- ================= Gallery ================= -->
+
+    <section class="gallery">
+
+        <!-- Nature -->
+
+        <div class="card" data-category="nature">
+            <img src="images/Nature.jpg" alt="Nature">
+            <div class="overlay">
+                <h3>Nature</h3>
+            </div>
+        </div>
+
+        <div class="card" data-category="nature">
+            <img src="images/Nature2.jpg" alt="Nature">
+            <div class="overlay">
+                <h3>Nature</h3>
+            </div>
+        </div>
+
+        <div class="card" data-category="nature">
+            <img src="images/Nature3.jpg" alt="Nature">
+            <div class="overlay">
+                <h3>Nature</h3>
+            </div>
+        </div>
+
+        <!-- Travel -->
+
+        <div class="card" data-category="travel">
+            <img src="images/Travel.jpg" alt="Travel">
+            <div class="overlay">
+                <h3>Travel</h3>
+            </div>
+        </div>
+
+        <div class="card" data-category="travel">
+            <img src="images/Travel2.jpg" alt="Travel">
+            <div class="overlay">
+                <h3>Travel</h3>
+            </div>
+        </div>
+
+        <div class="card" data-category="travel">
+            <img src="images/travel3.png" alt="Travel">
+            <div class="overlay">
+                <h3>Travel</h3>
+            </div>
+        </div>
+
+        <!-- Food -->
+
+        <div class="card" data-category="food">
+            <img src="images/Food.webp" alt="Food">
+            <div class="overlay">
+                <h3>Food</h3>
+            </div>
+        </div>
+
+        <div class="card" data-category="food">
+            <img src="images/Foo2.png" alt="Food">
+            <div class="overlay">
+                <h3>Food</h3>
+            </div>
+        </div>
+
+        <div class="card" data-category="food">
+            <img src="images/food3.png" alt="Food">
+            <div class="overlay">
+                <h3>Food</h3>
+            </div>
+        </div>
+
+        <!-- Animals -->
+
+        <div class="card" data-category="animals">
+            <img src="images/Animal.jpg" alt="Animals">
+            <div class="overlay">
+                <h3>Animals</h3>
+            </div>
+        </div>
+
+        <div class="card" data-category="animals">
+            <img src="images/Animal2.jpg" alt="Animals">
+            <div class="overlay">
+                <h3>Animals</h3>
+            </div>
+        </div>
+
+        <div class="card" data-category="animals">
+            <img src="images/Animal3.jpg" alt="Animals">
+            <div class="overlay">
+                <h3>Animals</h3>
+            </div>
+        </div>
+
+    </section>
+
+    <!-- ================= Lightbox ================= -->
+
+    <div class="lightbox">
+
+        <span class="close">&times;</span>
+
+        <button class="prev">
+            <i class="fa-solid fa-angle-left"></i>
+        </button>
+
+        <img id="lightbox-img" src="" alt="">
+
+        <button class="next">
+            <i class="fa-solid fa-angle-right"></i>
+        </button>
+
+    </div>
+
+    <!-- ================= Footer ================= -->
+
+    <footer>
+        <p>© 2026 Image Gallery | Designed by ANSA</p>
+    </footer>
+
+    
+
+<script>
+
+const cards = document.querySelectorAll(".card");
+const filterButtons = document.querySelectorAll("nav ul li");
+
+const lightbox = document.querySelector(".lightbox");
+const lightboxImg = document.getElementById("lightbox-img");
+
+const closeBtn = document.querySelector(".close");
+const nextBtn = document.querySelector(".next");
+const prevBtn = document.querySelector(".prev");
+
+let visibleImages = [];
+let currentIndex = 0;
+
+// ==========================
+// Update Visible Images
+// ==========================
+
+function updateVisibleImages() {
+    visibleImages = [];
+
+    cards.forEach(card => {
+        if (card.style.display !== "none") {
+            visibleImages.push(card.querySelector("img"));
+        }
+    });
+}
+
+// ==========================
+// Filter Gallery
+// ==========================
+
+filterButtons.forEach(button => {
+
+    button.addEventListener("click", () => {
+
+        filterButtons.forEach(btn => btn.classList.remove("active"));
+        button.classList.add("active");
+
+        const filter = button.dataset.filter;
+
+        cards.forEach(card => {
+
+            if (filter === "all" || card.dataset.category === filter) {
+                card.style.display = "block";
+            } else {
+                card.style.display = "none";
+            }
+
+        });
+
+        updateVisibleImages();
+        addImageEvents();
+
+    });
+
+});
+
+// ==========================
+// Open Lightbox
+// ==========================
+
+function addImageEvents() {
+
+    updateVisibleImages();
+
+    visibleImages.forEach((img, index) => {
+
+        img.onclick = () => {
+
+            currentIndex = index;
+            lightbox.style.display = "flex";
+            lightboxImg.src = visibleImages[currentIndex].src;
+
+        };
+
+    });
+
+}
+
+addImageEvents();
+
+// ==========================
+// Next Image
+// ==========================
+
+nextBtn.addEventListener("click", () => {
+
+    currentIndex++;
+
+    if (currentIndex >= visibleImages.length) {
+        currentIndex = 0;
+    }
+
+    lightboxImg.src = visibleImages[currentIndex].src;
+
+});
+
+// ==========================
+// Previous Image
+// ==========================
+
+prevBtn.addEventListener("click", () => {
+
+    currentIndex--;
+
+    if (currentIndex < 0) {
+        currentIndex = visibleImages.length - 1;
+    }
+
+    lightboxImg.src = visibleImages[currentIndex].src;
+
+});
+
+// ==========================
+// Close Lightbox
+// ==========================
+
+closeBtn.addEventListener("click", () => {
+
+    lightbox.style.display = "none";
+
+});
+
+// ==========================
+// Close on Background Click
+// ==========================
+
+lightbox.addEventListener("click", (e) => {
+
+    if (e.target === lightbox) {
+        lightbox.style.display = "none";
+    }
+
+});
+
+// ==========================
+// Keyboard Navigation
+// ==========================
+
+document.addEventListener("keydown", (e) => {
+
+    if (lightbox.style.display === "flex") {
+
+        if (e.key === "ArrowRight") {
+            nextBtn.click();
+        }
+
+        if (e.key === "ArrowLeft") {
+            prevBtn.click();
+        }
+
+        if (e.key === "Escape") {
+            lightbox.style.display = "none";
+        }
+
+    }
+
+});
+    </script>
+
+</body>
+</html>
